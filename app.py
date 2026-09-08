@@ -4,12 +4,13 @@ System Health Dashboard API
 A lightweight status API exposing basic health, version, and
 environment information for an operations team.
 """
+
 import os
 from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-APP_VERSION = "1.0.0"
+APP_VERSION = "1.1.0"
 
 
 @app.route("/health", methods=["GET"])
