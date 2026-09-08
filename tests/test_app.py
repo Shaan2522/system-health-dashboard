@@ -33,7 +33,7 @@ def test_version_returns_expected_version(client):
     assert response.status_code == 200
     body = response.get_json()
     assert "version" in body
-    assert body["version"] == "9.9.9"
+    assert body["version"] == "v1.1.0"
 
 
 def test_environment_reads_from_env_var(client, monkeypatch):
