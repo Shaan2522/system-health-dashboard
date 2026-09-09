@@ -1,0 +1,15 @@
+.git
+.gitignore
+.github/
+__pycache__/
+*.pyc
+.pytest_cache/
+tests/
+venv/
+.venv/
+env/
+.env
+*.md
+Jenkinsfile
+Dockerfile
+.dockerignore
