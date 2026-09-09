@@ -17,14 +17,14 @@ pipeline {
         stage('Install') {
             steps {
                 bat '"%PYTHON%" -m venv venv'
-                bat 'venv\\Scripts\\pip install --upgrade pip'
-                bat 'venv\\Scripts\\pip install -r requirements.txt'
+                bat 'venv\\Scripts\\python.exe -m pip install --upgrade pip'
+                bat 'venv\\Scripts\\python.exe -m pip install -r requirements.txt'
             }
         }
 
         stage('Test') {
             steps {
-                bat 'venv\\Scripts\\pytest tests/ -v'
+                bat 'venv\\Scripts\\python.exe -m pytest tests/ -v'
             }
         }
 
