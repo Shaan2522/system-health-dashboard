@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = 'system-health-dashboard'
+        PYTHON = 'C:\\Users\\shant\\AppData\\Local\\Programs\\Python\\Python39\\python.exe'
     }
 
     stages {
@@ -15,7 +16,7 @@ pipeline {
 
         stage('Install') {
             steps {
-                bat 'python -m venv venv'
+                bat '"%PYTHON%" -m venv venv'
                 bat 'venv\\Scripts\\pip install --upgrade pip'
                 bat 'venv\\Scripts\\pip install -r requirements.txt'
             }
