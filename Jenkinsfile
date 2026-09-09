@@ -44,7 +44,7 @@ pipeline {
         stage('Health Check') {
             steps {
                 bat '"%DOCKER%" run -d -p 5050:5000 -e APP_ENV=ci --name health-check-%BUILD_NUMBER% %IMAGE_NAME%:%BUILD_NUMBER%'
-                bat 'timeout /t 5'
+                bat 'ping -n 6 127.0.0.1 > nul'
                 bat 'curl -f http://localhost:5050/health'
             }
             post {
