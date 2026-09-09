@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+
+    environment {
+        IMAGE_NAME = 'system-health-dashboard'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install') {
+            steps {
+                bat 'python -m venv venv'
+                bat 'venv\\Scripts\\pip install --upgrade pip'
+                bat 'venv\\Scripts\\pip install -r requirements.txt'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'venv\\Scripts\\pytest tests/ -v'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat "docker build -t %IMAGE_NAME%:latest ."
+            }
+        }
+
+        stage('Tag') {
+            steps {
+                bat "docker tag %IMAGE_NAME%:latest %IMAGE_NAME%:%BUILD_NUMBER%"
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                bat "docker run -d -p 5050:5000 -e APP_ENV=ci --name health-check-%BUILD_NUMBER% %IMAGE_NAME%:%BUILD_NUMBER%"
+                bat 'timeout /t 5'
+                bat 'curl -f http://localhost:5050/health'
+            }
+            post {
+                always {
+                    bat "docker stop health-check-%BUILD_NUMBER% || exit 0"
+                    bat "docker rm health-check-%BUILD_NUMBER% || exit 0"
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully: dependencies installed, tests passed, image built, tagged, and health-checked.'
+        }
+        failure {
+            echo 'Pipeline failed. Check the stage logs above for details.'
+        }
+    }
+}
